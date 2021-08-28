@@ -32,7 +32,7 @@ public class Aplicacion {
 	private JFrame jframe;
 
 	private JPanel jpanelIzquierdo, jpanelDerecho, jpanel;
-	private JButton botonCargar, botonOrdenar, botonBuscar;
+	private JButton botonCargar, botonOrdenar, botonBuscar, botonGuardar;
 	private JScrollPane scrollTextoLista;
 	private JTextArea textoLista;
 	// private JTextArea textoLinea;
@@ -88,6 +88,14 @@ public class Aplicacion {
 				cargarTexto();
 			}
 		});
+		botonGuardar = new JButton("Guardar lista");
+		botonGuardar.setMaximumSize(new Dimension(250, botonGuardar.getPreferredSize().height));
+		botonGuardar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				guardarTexto();
+			}
+		});
 		botonOrdenar = new JButton("Ordenar lista");
 		botonOrdenar.setMaximumSize(new Dimension(250, botonOrdenar.getPreferredSize().height));
 		botonOrdenar.addActionListener(new ActionListener() {
@@ -106,7 +114,9 @@ public class Aplicacion {
 				}
 			}
 		});
+		// Agregar elementos al panel derecho
 		jpanelDerecho.add(botonCargar);
+		jpanelDerecho.add(botonGuardar);
 		jpanelDerecho.add(botonOrdenar);
 		jpanelDerecho.add(botonBuscar);
 	}
@@ -132,9 +142,15 @@ public class Aplicacion {
 		JFileChooser elegirArchivo = new JFileChooser();
 		elegirArchivo.setDialogTitle("Cargar lista");
 		elegirArchivo.setCurrentDirectory(new File(System.getProperty("user.home")));
-		FileFilter filtro = new FileNameExtensionFilter("Archivo .txt", "txt");
+		String [] extension = archivo.obtenerTipoArchivo();
+		FileFilter [] filtro = new FileFilter[extension.length];
+		for(int i = 0; i < extension.length; i++) {
+			filtro[i] = new FileNameExtensionFilter(extension[i], extension[i]);
+			elegirArchivo.addChoosableFileFilter(filtro[i]);
+		}
+		//FileFilter filtro = new FileNameExtensionFilter("Archivo .txt", "txt");
 		elegirArchivo.setAcceptAllFileFilterUsed(false);
-		elegirArchivo.setFileFilter(filtro);
+		//elegirArchivo.setFileFilter(filtro);
 		if (elegirArchivo.showOpenDialog(jframe) == JFileChooser.APPROVE_OPTION) {
 			File archivoSeleccionado = elegirArchivo.getSelectedFile();
 			archivo.leer(archivoSeleccionado.getAbsolutePath());
@@ -166,6 +182,27 @@ public class Aplicacion {
 		jframe.pack();
 		jframe.setLocationRelativeTo(null); // ubicar en el centro del escritorio
 		jframe.setVisible(true);
+	}
+	
+	private void guardarTexto() {
+		JFileChooser elegirArchivo = new JFileChooser();
+		elegirArchivo.setDialogTitle("Guardar Lista");
+		elegirArchivo.setCurrentDirectory(new File(System.getProperty("user.home")));
+		String [] extension = archivo.obtenerTipoArchivo();
+		FileFilter [] filtro = new FileFilter[extension.length];
+		for(int i = 0; i < extension.length; i++) {
+			filtro[i] = new FileNameExtensionFilter(extension[i], extension[i]);
+			elegirArchivo.addChoosableFileFilter(filtro[i]);
+		}
+		//FileFilter filtro = new FileNameExtensionFilter("txt", "txt");
+		elegirArchivo.setAcceptAllFileFilterUsed(false);
+		//elegirArchivo.setFileFilter(filtro);
+		if (elegirArchivo.showSaveDialog(jframe) == JFileChooser.APPROVE_OPTION) {
+			File archivoSeleccionado = elegirArchivo.getSelectedFile();
+			String tipoArchivo = elegirArchivo.getFileFilter().getDescription();
+			archivo.escribir(archivoSeleccionado.getAbsolutePath(), tipoArchivo, listaE);
+			System.out.println("Archivo " + archivoSeleccionado.getAbsolutePath() + " guardado");
+		}
 	}
 
 	private void introducirBusqueda() {
