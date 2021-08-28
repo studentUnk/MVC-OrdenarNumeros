@@ -7,6 +7,8 @@ public class Main {
 	public static void main(String [] args) {
 		Aplicacion aplicacion = new Aplicacion();
 		aplicacion.crearVentana("Lista Ordenada");
+		
+		
 		/*
 		Archivo leerArchivo = new Archivo();
 		//leerArchivo.leer("Numeros.txt");
