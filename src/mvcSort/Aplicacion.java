@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,33 +32,46 @@ public class Aplicacion {
 
 	private JFrame jframe;
 
-	private JPanel jpanelIzquierdo, jpanelDerecho, jpanel;
+	private JPanel jpanelIzquierdo, jpanelDerecho, jpanelSuperior, jpanelInferior, jpanel;
 	private JButton botonCargar, botonOrdenar, botonBuscar, botonGuardar;
 	private JScrollPane scrollTextoLista;
 	private JTextArea textoLista;
+	private JLabel accion;
 	// private JTextArea textoLinea;
 	private JTextField textoBuscar;
 	private Archivo archivo;
 	private ArrayList<String> datos;
 	private Integer[] listaE;
+	private OrdenarLista ordenarLista;
+
 	Aplicacion() {
 		archivo = new Archivo();
 		textoLista = new JTextArea();
 		scrollTextoLista = new JScrollPane(textoLista);
+		accion = new JLabel("");
 		// scrollTextoLista.setRowHeaderView(textoLinea);
 	}
 
 	private void buscarElemento() {
-		BusquedaBinaria bB = new BusquedaBinaria();
-		int posicion = bB.busquedaBinaria(listaE, Integer.parseInt(textoBuscar.getText()), 2);
-		System.out.println("Elemento " + textoBuscar.getText() + " esta en linea " + Integer.toString(posicion));
-		String mensaje = "Elemento " + textoBuscar.getText();
-		if (posicion > 0) {
-			mensaje = mensaje + " esta en la posicion " + Integer.toString(posicion);
-		} else {
-			mensaje = mensaje + " no encontrado";
+		if(ordenarLista != null) { // validar si la lista ya fue ordenada
+			listaE = ordenarLista.obtenerListaE();
 		}
-		JOptionPane.showMessageDialog(jframe, mensaje, "Resultado", JOptionPane.PLAIN_MESSAGE);
+		if(listaE != null && textoBuscar.getText().length() > 0) {
+			System.out.println("Busqueda iniciada");
+			BusquedaBinaria bB = new BusquedaBinaria();
+			int posicion = bB.busquedaBinaria(listaE, Integer.parseInt(textoBuscar.getText()), 2);
+			System.out.println("Elemento " + textoBuscar.getText() + " esta en linea " + Integer.toString(posicion));
+			String mensaje = "Elemento " + textoBuscar.getText();
+			if (posicion > 0) {
+				mensaje = mensaje + " esta en la posicion " + Integer.toString(posicion);
+			} else {
+				mensaje = mensaje + " no encontrado";
+			}
+			JOptionPane.showMessageDialog(jframe, mensaje, "Resultado", JOptionPane.PLAIN_MESSAGE);
+		}else {
+			String mensaje = "La lista aún no se ha ordenado para poder realizar la búsqueda";
+			JOptionPane.showMessageDialog(jframe, mensaje, "Operación no válida", JOptionPane.PLAIN_MESSAGE);
+		}
 	}
 
 	/*
@@ -111,6 +125,9 @@ public class Aplicacion {
 			public void actionPerformed(ActionEvent e) {
 				if (textoLista.getDocument().getLength() > 0) {
 					buscarElemento();
+				}else {
+					String mensaje = "No hay lista para poder realizar la búsqueda";
+					JOptionPane.showMessageDialog(jframe, mensaje, "Operación no válida", JOptionPane.PLAIN_MESSAGE);
 				}
 			}
 		});
@@ -122,47 +139,75 @@ public class Aplicacion {
 	}
 
 	private void cargarListaOrdenada() {
-		if (textoLista.getText() != null) {
-			QuickSort qS = new QuickSort();
-			listaE = archivo.convertirArrayEntero();
-			qS.ordenarLista(listaE, 4);
-			System.out.println("Lista ha sido ordenada");
-			textoLista.selectAll();
-			textoLista.replaceSelection("");
-			for (int i = 0; i < listaE.length; i++) {
-				String enumeracion = String.format("%09d", i + 1);
-				textoLista.append(enumeracion + "->" + listaE[i].toString() + "\n");
-			}
-			System.out.println("Lista ordenada y cargando al panel");
+		if (textoLista.getText() != null && !textoLista.getText().toString().isEmpty()) {
+			
+			System.out.println("Ordenar lista");
+			
+			JOptionPane jPane = new JOptionPane("La lista está siendo ordenada");
+			JDialog dialog = jPane.createDialog(null,"Ordenando lista...");
+			jPane.setOptions(new Object[]{}); // remueve todas las opciones de cuadro de diálogo
+			dialog.setModal(false);
+			dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			dialog.setVisible(true);
+			
+			//OrdenarLista ordenarLista = new OrdenarLista();
+			ordenarLista = new OrdenarLista();
+			ordenarLista.establecerValoresLista(textoLista, listaE, archivo, dialog);
+			ordenarLista.iniciarHilo();
+			
+			//this.listaE = ordenarLista.obtenerListaE();
+			
 			jpanelIzquierdo.repaint();
+			jpanelSuperior.repaint();
+		}else {
+			String mensaje = "No hay ninguna lista para ordenar";
+			JOptionPane.showMessageDialog(jframe, mensaje, "Operación no válida", JOptionPane.PLAIN_MESSAGE);
 		}
 	}
+	
+	/*private void establecerListaE(Integer [] listaE) {
+		this.listaE = listaE;
+	}*/
 
 	private void cargarTexto() {
 		JFileChooser elegirArchivo = new JFileChooser();
 		elegirArchivo.setDialogTitle("Cargar lista");
 		elegirArchivo.setCurrentDirectory(new File(System.getProperty("user.home")));
-		String [] extension = archivo.obtenerTipoArchivo();
-		FileFilter [] filtro = new FileFilter[extension.length];
-		for(int i = 0; i < extension.length; i++) {
+		String[] extension = archivo.obtenerTipoArchivo();
+		FileFilter[] filtro = new FileFilter[extension.length];
+		for (int i = 0; i < extension.length; i++) {
 			filtro[i] = new FileNameExtensionFilter(extension[i], extension[i]);
 			elegirArchivo.addChoosableFileFilter(filtro[i]);
 		}
-		//FileFilter filtro = new FileNameExtensionFilter("Archivo .txt", "txt");
+		// FileFilter filtro = new FileNameExtensionFilter("Archivo .txt", "txt");
 		elegirArchivo.setAcceptAllFileFilterUsed(false);
-		//elegirArchivo.setFileFilter(filtro);
+		// elegirArchivo.setFileFilter(filtro);
 		if (elegirArchivo.showOpenDialog(jframe) == JFileChooser.APPROVE_OPTION) {
 			File archivoSeleccionado = elegirArchivo.getSelectedFile();
-			archivo.leer(archivoSeleccionado.getAbsolutePath());
-			System.out.println("Archivo " + archivoSeleccionado.getAbsolutePath() + " cargado");
-			mostrarLista();
+						
+			JOptionPane jPane = new JOptionPane("El archivo está siendo cargado");
+			JDialog dialog = jPane.createDialog(null,"Cargando archivo...");
+			jPane.setOptions(new Object[]{}); // remueve todas las opciones de cuadro de diálogo
+			dialog.setModal(false);
+			dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			dialog.setVisible(true);
+						
+			CargarArchivo cargarArchivo = new CargarArchivo(archivo, archivoSeleccionado.getAbsolutePath(), Thread.currentThread());
+			cargarArchivo.establecerDatosLista(
+					datos, 
+					textoLista,
+					dialog);
+			cargarArchivo.iniciarHilo();
+			archivo = cargarArchivo.obtenerArchivo(); // posible redundancia de asignación		
+			
+			System.out.println("Archivo " + archivoSeleccionado.getAbsolutePath() + " cargado");			
 		}
 	}
 
 	public void crearVentana(String titulo) {
 		jframe = new JFrame(titulo);
 		jpanel = new JPanel();
-		jpanel.setLayout(new BoxLayout(jpanel, BoxLayout.X_AXIS));
+		jpanel.setLayout(new BoxLayout(jpanel, BoxLayout.Y_AXIS));
 
 		jpanelDerecho = new JPanel();
 		jpanelDerecho.setLayout(new BoxLayout(jpanelDerecho, BoxLayout.Y_AXIS));
@@ -175,33 +220,52 @@ public class Aplicacion {
 
 		seccionDerecha();
 		seccionIzquierda();
-		jpanel.add(jpanelIzquierdo);
-		jpanel.add(jpanelDerecho);
+		jpanelSuperior = new JPanel();
+		jpanelSuperior.setLayout(new BoxLayout(jpanelSuperior, BoxLayout.X_AXIS));
+		jpanelSuperior.add(jpanelIzquierdo);
+		jpanelSuperior.add(jpanelDerecho);
+		jpanelInferior = new JPanel();
+		//jpanelInferior.setLayout(new FlowLayout());
+		seccionInferior();
+		
+		//jpanel.add(jpanelIzquierdo);
+		//jpanel.add(jpanelDerecho);
+		jpanel.add(jpanelSuperior);
+		jpanel.add(jpanelInferior);
 
 		jframe.setContentPane(jpanel);
 		jframe.pack();
 		jframe.setLocationRelativeTo(null); // ubicar en el centro del escritorio
 		jframe.setVisible(true);
 	}
-	
+
 	private void guardarTexto() {
-		JFileChooser elegirArchivo = new JFileChooser();
-		elegirArchivo.setDialogTitle("Guardar Lista");
-		elegirArchivo.setCurrentDirectory(new File(System.getProperty("user.home")));
-		String [] extension = archivo.obtenerTipoArchivo();
-		FileFilter [] filtro = new FileFilter[extension.length];
-		for(int i = 0; i < extension.length; i++) {
-			filtro[i] = new FileNameExtensionFilter(extension[i], extension[i]);
-			elegirArchivo.addChoosableFileFilter(filtro[i]);
+		//if(listaE != null) { // Validar que la lista ha sido ordenada
+		if(ordenarLista != null) {
+			listaE = ordenarLista.obtenerListaE();
 		}
-		//FileFilter filtro = new FileNameExtensionFilter("txt", "txt");
-		elegirArchivo.setAcceptAllFileFilterUsed(false);
-		//elegirArchivo.setFileFilter(filtro);
-		if (elegirArchivo.showSaveDialog(jframe) == JFileChooser.APPROVE_OPTION) {
-			File archivoSeleccionado = elegirArchivo.getSelectedFile();
-			String tipoArchivo = elegirArchivo.getFileFilter().getDescription();
-			archivo.escribir(archivoSeleccionado.getAbsolutePath(), tipoArchivo, listaE);
-			System.out.println("Archivo " + archivoSeleccionado.getAbsolutePath() + " guardado");
+		if(listaE != null) { // Validar que la lista ha sido ordenada
+			JFileChooser elegirArchivo = new JFileChooser();
+			elegirArchivo.setDialogTitle("Guardar Lista");
+			elegirArchivo.setCurrentDirectory(new File(System.getProperty("user.home")));
+			String[] extension = archivo.obtenerTipoArchivo();
+			FileFilter[] filtro = new FileFilter[extension.length];
+			for (int i = 0; i < extension.length; i++) {
+				filtro[i] = new FileNameExtensionFilter(extension[i], extension[i]);
+				elegirArchivo.addChoosableFileFilter(filtro[i]);
+			}
+			// FileFilter filtro = new FileNameExtensionFilter("txt", "txt");
+			elegirArchivo.setAcceptAllFileFilterUsed(false);
+			// elegirArchivo.setFileFilter(filtro);
+			if (elegirArchivo.showSaveDialog(jframe) == JFileChooser.APPROVE_OPTION) {
+				File archivoSeleccionado = elegirArchivo.getSelectedFile();
+				String tipoArchivo = elegirArchivo.getFileFilter().getDescription();
+				archivo.escribir(archivoSeleccionado.getAbsolutePath(), tipoArchivo, listaE);
+				System.out.println("Archivo " + archivoSeleccionado.getAbsolutePath() + " guardado");
+			}
+		}else {
+			String mensaje = "La lista no ha sido ordenada aún";
+			JOptionPane.showMessageDialog(jframe, mensaje, "Operación no válida", JOptionPane.PLAIN_MESSAGE);
 		}
 	}
 
@@ -211,12 +275,17 @@ public class Aplicacion {
 		jpanelDerecho.add(textoBuscar);
 	}
 
-	private void mostrarLista() {
+	/*private void mostrarLista() {
 		datos = archivo.getDatos();
 		for (int i = 0; i < datos.size(); i++) {
 			String enumeracion = String.format("%09d", i + 1);
 			textoLista.append(enumeracion + "->" + datos.get(i).toString() + "\n");
 		}
+	}*/
+	
+	private void seccionInferior() {
+		//accion.setText("El archivo es increiblemente grande");
+		jpanelInferior.add(accion);
 	}
 
 	private void seccionDerecha() {
