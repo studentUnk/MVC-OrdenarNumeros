@@ -1,4 +1,4 @@
-package mvcSort;
+package modelo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,8 +10,10 @@ import java.io.FileWriter;
 public class Archivo {
 
 	private ArrayList<String> datos;
+	private File file;
+	private String[] tipo = {"txt","csv"};
 
-	Archivo() {
+	public Archivo() {
 		this.datos = new ArrayList<String>();
 	}
 
@@ -23,9 +25,11 @@ public class Archivo {
 		return lista;
 	}
 
-	public void crear(String nombreArchivo) {
+	//public void crear(String nombreArchivo, String ubicacion) {
+	public void crear(String ubicacionArchivo, String tipo) {
 		try {
-			File file = new File(nombreArchivo);
+			//file = new File(ubicacion+"\\"+nombreArchivo);
+			file = new File(ubicacionArchivo + "." + tipo);
 			if (file.createNewFile()) {
 				System.out.println("Archivo creado: " + file.getName());
 			} else {
@@ -37,10 +41,15 @@ public class Archivo {
 		}
 	}
 
-	public void escribir(String nombreArchivo, Integer[] lista) {
+	//public void escribir(String nombreArchivo, String ubicacion, Integer[] lista) {
+	public void escribir(String ubicacionArchivo, String tipo, Integer[] lista) {
 		try {
-			crear(nombreArchivo);
-			FileWriter fileWriter = new FileWriter(nombreArchivo);
+			//crear(nombreArchivo, ubicacion);
+			crear(ubicacionArchivo,tipo);
+			//FileWriter fileWriter = new FileWriter(nombreArchivo);
+			//FileWriter fileWriter = new FileWriter(file);
+			//FileWriter fileWriter = new FileWriter(ubicacion+"\\"+nombreArchivo);
+			FileWriter fileWriter = new FileWriter(ubicacionArchivo+"."+tipo);
 			for (int i = 0; i < lista.length; i++) {
 				fileWriter.write(Integer.toString(lista[i]) + "\n");
 			}
@@ -77,6 +86,10 @@ public class Archivo {
 			System.out.println("Error al cargar archivo");
 			e.printStackTrace();
 		}
+	}
+	
+	public String [] obtenerTipoArchivo() {
+		return tipo;
 	}
 
 }
