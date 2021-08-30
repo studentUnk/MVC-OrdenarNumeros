@@ -1,4 +1,4 @@
-package mvcSort;
+package modelo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ public class Archivo {
 	private File file;
 	private String[] tipo = {"txt","csv"};
 
-	Archivo() {
+	public Archivo() {
 		this.datos = new ArrayList<String>();
 	}
 

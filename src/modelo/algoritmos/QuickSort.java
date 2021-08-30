@@ -1,9 +1,11 @@
-package algoritmos;
+package modelo.algoritmos;
 
 import java.util.Arrays;
 //import java.util.Random;
 //import java.lang.Runnable;
 import java.util.concurrent.ThreadLocalRandom;
+//import algoritmos.Algoritmo;
+
 //import algoritmos.Algoritmo;
 
 /**

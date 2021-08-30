@@ -1,9 +1,11 @@
-package mvcSort;
+package controlador;
 
 import java.util.ArrayList;
 
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
+
+import modelo.*;
 
 public class CargarArchivo implements Runnable {
 	
@@ -15,7 +17,7 @@ public class CargarArchivo implements Runnable {
 	private JTextArea textoLista;
 	private ArrayList<String> datos;
 	
-	CargarArchivo(Archivo archivo, String rutaArchivo, Thread threadExterno) {
+	public CargarArchivo(Archivo archivo, String rutaArchivo, Thread threadExterno) {
 		this.archivo = archivo;
 		this.rutaArchivo = rutaArchivo;
 		thread = new Thread(this);

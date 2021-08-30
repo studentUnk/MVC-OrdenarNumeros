@@ -1,9 +1,10 @@
-package mvcSort;
+package controlador;
 
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 
-import algoritmos.QuickSort;
+import modelo.*;
+import modelo.algoritmos.*;
 
 public class OrdenarLista implements Runnable {
 	
@@ -14,7 +15,7 @@ public class OrdenarLista implements Runnable {
 	public Thread thread;
 	public JDialog dialog;
 	
-	OrdenarLista(){
+	public OrdenarLista(){
 		thread = new Thread(this);
 	}	
 	
@@ -31,9 +32,17 @@ public class OrdenarLista implements Runnable {
 	
 	private void cargarListaOrdenada() {
 		
-			QuickSort qS = new QuickSort();
 			listaE = archivo.convertirArrayEntero();
+			
+			QuickSort qS = new QuickSort();
+			//Burbuja burbuja = new Burbuja();
+			//Seleccion seleccion = new Seleccion();
+			//Insercion insercion = new Insercion();
 			qS.ordenarLista(listaE, 4);
+			//burbuja.ordenarLista(listaE);
+			//seleccion.ordenarLista(listaE);
+			//insercion.ordenarLista(listaE);
+			
 			System.out.println("Lista ha sido ordenada");
 			textoLista.selectAll();
 			textoLista.replaceSelection("");

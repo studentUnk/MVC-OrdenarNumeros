@@ -1,4 +1,4 @@
-package algoritmos;
+package modelo.algoritmos;
 
 import java.util.concurrent.ThreadLocalRandom;
 

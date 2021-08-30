@@ -1,4 +1,4 @@
-package algoritmos;
+package modelo.algoritmos;
 
 /**
  * Esta clase contiene funciones o acciones generales para las clases o algoritmos de búsqueda y ordenamiento
