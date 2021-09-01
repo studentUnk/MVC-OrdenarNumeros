@@ -3,6 +3,14 @@ package modelo.algoritmos;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Clase que contiene el algoritmo de ordenamiento de Inserción.
+ * @author Camilo J.
+ * @version 1.0
+ * @since 2021-08-31 
+ *
+ */
+
 public class Insercion {
 	
 	public static void main(String[] args) {
@@ -19,6 +27,13 @@ public class Insercion {
 		System.out.println(Arrays.toString(lista));
 	}
 	
+	/**
+	 * Está función realiza el proceso de insertar a izquierda o derecha el valor de la lista desordenada en una nueva lista
+	 * que está ordenada. Se inicia con un valor 0, y en base a este se va organizando: si lista[1] es mayor que lista[0], lista[1]
+	 * será ubicado después de lista[0]; si lista[1] es menor que lista[0], lista[1] será ubicado antes de lista[0]
+	 * 
+	 * @param lista Lista de datos que será organizada
+	 */
 	public void ordenarLista(Integer lista[]) {
 		if(lista.length > 0 ) {
 			ArrayList<Integer> array = new ArrayList<Integer>();

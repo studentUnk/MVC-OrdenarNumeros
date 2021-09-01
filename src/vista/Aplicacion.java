@@ -16,6 +16,16 @@ import javax.swing.JTextField;
 //import javax.swing.event.DocumentListener;
 //import javax.swing.text.Element;
 
+/**
+ * Esta clase contiene los botones y áreas de texto que serán cargados y visualizados por el usuario.
+ * El diseño utilizado es de dos secciones en la parte superior de la ventana, y una sección en la parte inferior.
+ * En la parte superior se encuentran los botones y el area de texto en la cual será cargada la lista de datos.
+ * En la parte inferior se mostrará los datos de tiempos de rendimiento de cada uno de los algoritmos de ordenamiento ubicados en modelo.algoritmos.
+ * @author Camilo J.
+ * @version 1.0
+ * @since 2021-08-31 
+ *
+ */
 public class Aplicacion {
 
 	public JFrame jframe;
@@ -59,6 +69,10 @@ public class Aplicacion {
 	 * textoLinea.setText(getText()); } }); }
 	 */
 
+	/**
+	 * En esta función se crean los botones y estos son cargados a la ventana. Los botones son creados con un tamaño en especifico. 
+	 * El ancho que obtienen es el máximo del ancho que tienen permitido tomar. Después de creados son agregados al panel superior-derecho.
+	 */
 	private void cargarBotones() {
 		botonCargar = new JButton("Cargar lista");
 		botonCargar.setMaximumSize(new Dimension(250, botonCargar.getPreferredSize().height));
@@ -83,6 +97,12 @@ public class Aplicacion {
 	 * private void establecerListaE(Integer [] listaE) { this.listaE = listaE; }
 	 */
 
+	/**
+	 * En está función se crea todo el esqueleto, más los componentes de cada una de las partes que serán cargadas en la ventana.
+	 * Los componentes son cargados en un panel, que a su vez son cargados en otro panel, que finalmente es cargado en un frame el cual es lanzado
+	 * y visualizado por el usuario.
+	 * @param titulo Titulo de la ventana
+	 */
 	public void crearVentana(String titulo) {
 		jframe = new JFrame(titulo);
 		jpanel = new JPanel();
@@ -118,6 +138,10 @@ public class Aplicacion {
 		jframe.setVisible(true);
 	}
 
+	/**
+	 * Función que carga el área en la cual el usuario puede ingresar el dato de búsqueda de una variable en específico que pueda 
+	 * estar en la lista cargada.
+	 */
 	private void introducirBusqueda() {
 		textoBuscar = new JTextField();
 		textoBuscar.setMaximumSize(new Dimension(250, textoBuscar.getPreferredSize().height));
@@ -130,11 +154,18 @@ public class Aplicacion {
 	 * textoLista.append(enumeracion + "->" + datos.get(i).toString() + "\n"); } }
 	 */
 
+	/**
+	 * Función en proceso!!!!
+	 */
 	private void seccionInferior() {
 		// accion.setText("El archivo es increiblemente grande");
 		jpanelInferior.add(accion);
 	}
 
+	/**
+	 * En está función se agrega los componentes que serán cargados en la sección superior-derecha del layout.
+	 * Esta zona contiene los botones de interacción para que el usuario interactúe con la aplicación.
+	 */
 	private void seccionDerecha() {
 		cargarBotones();
 		introducirBusqueda();
@@ -144,6 +175,10 @@ public class Aplicacion {
 		jpanelDerecho.add(botonPrueba);		
 	}
 
+	/**
+	 * En está función se agregan los elementos que serán cargados en la sección superior-izquierda del layout.
+	 * Acá está ubicada el área de texto con la cual el usuario puede visualizar los datos cargados.
+	 */
 	private void seccionIzquierda() {
 		JLabel labelSeccionLista = new JLabel("Lista (posicion->elemento)");
 		// textoLinea.setBackground(Color.lightGray);

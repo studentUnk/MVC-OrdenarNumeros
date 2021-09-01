@@ -1,5 +1,6 @@
 package controlador;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -14,6 +15,15 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import vista.Aplicacion;
 import modelo.*;
 import modelo.algoritmos.BusquedaBinaria;
+
+/**
+ * Está clase es el punto de comunicación entre la vista y el controlador. 
+ * Todas las acciones que el usuario solicite serán tramitadas desde acá y harán uso de las clases creadas en el modelo.
+ * @author Camilo J.
+ * @version 1.0
+ * @since 2021-08-31 
+ *
+ */
 
 public class Controlador {
 
@@ -31,6 +41,9 @@ public class Controlador {
 		archivo = new Archivo();
 	}
 
+	/**
+	 * Está función establece la acción que hará cada botón después de que el usuario de click sobre este.
+	 */
 	public void accionBotones() {
 		aplicacion.botonCargar.addActionListener(new ActionListener() {
 			@Override
@@ -75,6 +88,13 @@ public class Controlador {
 		});
 	}
 
+	/**
+	 * Función en la cual se abre un cuadro de diálogo que le permite al usuario seleccionar el archivo que desea cargar.
+	 * El usuario puede seleccionar archivos con extensión .txt o .csv
+	 * El archivo es cargado y asignado a la variable "archivo".
+	 * Al cargar el texto, se iniciará un hilo secundario haciendo uso de la clase CargarArchivo, con el propósito de no bloquear la ventana al usuario
+	 * mientras se realiza la carga.
+	 */
 	private void cargarTexto() {
 		JFileChooser elegirArchivo = new JFileChooser();
 		elegirArchivo.setDialogTitle("Cargar lista");
@@ -108,6 +128,12 @@ public class Controlador {
 		}
 	}
 
+	/**
+	 * Función para buscar un elemento en la lista cargada.
+	 * El proceso de búsqueda se realizará solo si la lista ha sido ordenada, con el propósito de agilizar la búsqueda.
+	 * Después de realizada la búsqueda, un mensaje será mostrado al usuario indicando el exito o fracaso de la búsqueda.
+	 * Si la búsqueda es exitosa, en el mensaje aparecerá la posición númerica en la que se encuentra el valor ingresado.
+	 */
 	private void buscarElemento() {
 		if (ordenarLista != null) { // validar si la lista ya fue ordenada
 			listaE = ordenarLista.obtenerListaE();
@@ -131,6 +157,11 @@ public class Controlador {
 		}
 	}
 
+	/**
+	 * Función para ordenar la lista cargada y actualizar el área de texto en la ventana del usuario.
+	 * Similar al proceso de carga, la lista es ordenada y el área de texto se actualiza, todo este proceso es realizado en un hilo 
+	 * secundario inicializado desde la clase OrdenarLista, con el objetivo de no bloquear la ventana al usuario mientras este proceso se realiza. 
+	 */
 	private void cargarListaOrdenada() {
 		if (aplicacion.textoLista.getText() != null && !aplicacion.textoLista.getText().toString().isEmpty()) {
 
@@ -158,6 +189,11 @@ public class Controlador {
 		}
 	}
 
+	/**
+	 * Función para guardar la lista ordenada en un arhivo .txt o .csv.
+	 * Se carga una ventana auxiliar para que el usuario seleccione la carpeta en la que desea guardar el archivo, establece un nombre
+	 * y el archivo es escrito en la ubicación elegida.
+	 */
 	private void guardarTexto() {
 		// if(listaE != null) { // Validar que la lista ha sido ordenada
 		if (ordenarLista != null) {

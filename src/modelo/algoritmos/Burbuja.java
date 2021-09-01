@@ -2,6 +2,14 @@ package modelo.algoritmos;
 
 import java.util.Arrays;
 
+/**
+ * Clase que contiene el algoritmo de ordenamiento Burbuja.
+ * 
+ * @author Camilo J.
+ * @version 1.0
+ * @since 2021-08-31 
+ * 
+ */
 public class Burbuja {
 	
 	public static void main(String[] args) {
@@ -32,6 +40,12 @@ public class Burbuja {
 		lista[pos2] = temp;
 	}
 	
+	/**
+	 * Esta función ordena una lista recorriendo cada una de sus posciones e intercambiando posiciones contiguas en caso de que
+	 * lista[n-1]>lista[n], esto mediante un ciclo que inicia siempre en la posición 0 del arreglo y finaliza en una variable decreciente
+	 * cuyo primer valor es el tamaño de la lista. Lo que da como resultado, que el mayor valor de lista[0:n] sea desplazado a lista[n].
+	 * @param lista Lista que va a ser ordenada
+	 */
 	public void ordenarLista(Integer lista []) {
 		for(int limite = lista.length-1; limite > 0; limite--) {
 			for(int i = 0; i < limite; i++) {
@@ -41,7 +55,5 @@ public class Burbuja {
 			}
 		}
 	}
-
-	// private void b
 
 }
