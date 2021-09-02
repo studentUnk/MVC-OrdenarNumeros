@@ -4,11 +4,11 @@ Implementación de un modelo-vista-controlador para ordenar una secuencia de nú
 El algoritmo principal utilizado para organizar los datos es QuickSort.
 ## En ejecución
 A continuación se observan algunas imágenes del programa en funcionamiento.
-Inicio
+<br>Inicio<br>
 ![Imagen de inicio](/src/img/Programa-Ordenamiento-1.PNG)
-Carga de archivo
+<br>Carga de archivo<br>
 ![Imagen de carga](/src/img/Programa-Ordenamiento-2.PNG)
-Ordenar datos cargados
+<br>Ordenar datos cargados<br>
 ![Imagen de orden](/src/img/Programa-Ordenamiento-3.PNG)
-Búsqueda de un dato
+<br>Búsqueda de un dato<br>
 ![Imagen de buscar](/src/img/Programa-Ordenamiento-4.PNG)
