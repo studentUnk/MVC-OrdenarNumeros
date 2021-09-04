@@ -40,6 +40,23 @@ public class Archivo {
 		}
 		return lista;
 	}
+	
+	/**
+	 * Función para convertir la lista cargada como String en una lista de Enteros para facilitar su ordenamiento.
+	 * @return Lista de String convertida a Entero
+	 */
+	public Integer[] convertirArrayEntero(int limite) {
+		Integer[] lista;
+		int lim = this.datos.size();
+		if(lim > limite) {
+			lim = limite;
+		}
+		lista  = new Integer[lim];
+		for (int i = 0; i < lim; i++) {
+			lista[i] = Integer.parseInt(this.datos.get(i));
+		}
+		return lista;
+	}
 
 	/**
 	 * Función para guardar el archivo en una ruta específica.
@@ -115,10 +132,10 @@ public class Archivo {
 		try {
 			File file = new File(nombreArchivo);
 			Scanner scanner = new Scanner(file);
-			// int contar = 0;
+			//int contar = 0;
 			while (scanner.hasNextLine()) {
 				datos.add(scanner.nextLine()); // Leer lineas del archivo
-				// contar++;
+				//contar++;
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {

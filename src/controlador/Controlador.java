@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.PlainDocument;
 
 import vista.Aplicacion;
 import modelo.*;
@@ -39,6 +41,7 @@ public class Controlador {
 	public Controlador(Aplicacion aplicacion) {
 		this.aplicacion = aplicacion;
 		archivo = new Archivo();
+		establecerFiltro();
 	}
 
 	/**
@@ -69,8 +72,7 @@ public class Controlador {
 		aplicacion.botonPrueba.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String mensaje = "No hay ninguna acción por el momento...";
-				JOptionPane.showMessageDialog(aplicacion.jframe, mensaje, "Operación no válida", JOptionPane.PLAIN_MESSAGE);
+				cargarTiempos();
 			}
 		});
 
@@ -125,6 +127,33 @@ public class Controlador {
 			archivo = cargarArchivo.obtenerArchivo(); // posible redundancia de asignación
 
 			System.out.println("Archivo " + archivoSeleccionado.getAbsolutePath() + " cargado");
+		}
+	}
+	
+	/**
+	 * Función para calcular tiempos de ejecución por algoritmo de ordenamiento
+	 */
+	private void cargarTiempos() {
+		if(!aplicacion.textoLista.getText().isEmpty()) {
+			Tiempos tiempos = new Tiempos();
+			JOptionPane jPane = new JOptionPane(" ");
+			// Uso de dialog con ProgressBar basado en:
+			// http://www.java2s.com/Tutorial/Java/0240__Swing/Creatingamodalprogressdialog.htm
+			JDialog dialog = jPane.createDialog(null, "Calculando tiempos...");
+			jPane.setOptions(new Object[] {}); // remueve todas las opciones de cuadro de diálogo
+			//JDialog dialog = new JDialog(null,"Calculando tiempos...",true);
+			JProgressBar progreso = new JProgressBar(0,100);
+			dialog.add(progreso);
+			dialog.setModal(false);
+			dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+			dialog.setVisible(true);
+			dialog.setSize(300, 75);
+			tiempos.establecerValoresLista(aplicacion.tiemposTexto, archivo, dialog, progreso);
+			tiempos.iniciarHilo();
+		}
+		else {
+			String mensaje = "No se puede calcular tiempos porque no se ha cargado ningún dato";
+			JOptionPane.showMessageDialog(aplicacion.jframe, mensaje, "Operación no válida", JOptionPane.PLAIN_MESSAGE);
 		}
 	}
 
@@ -187,6 +216,14 @@ public class Controlador {
 			String mensaje = "No hay ninguna lista para ordenar";
 			JOptionPane.showMessageDialog(aplicacion.jframe, mensaje, "Operación no válida", JOptionPane.PLAIN_MESSAGE);
 		}
+	}
+	
+	/**
+	 * Función para limitar los caracteres que pueden ser ingresados por el usuario cuando va a realizar una búsqueda.
+	 */
+	private void establecerFiltro() {
+		PlainDocument doc = (PlainDocument) aplicacion.textoBuscar.getDocument();
+		doc.setDocumentFilter(new FiltroNumeros());
 	}
 
 	/**

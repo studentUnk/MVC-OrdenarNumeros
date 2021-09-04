@@ -48,6 +48,7 @@ public class Burbuja {
 	 */
 	public void ordenarLista(Integer lista []) {
 		for(int limite = lista.length-1; limite > 0; limite--) {
+			//System.out.println(limite);
 			for(int i = 0; i < limite; i++) {
 				if(lista[i] > lista[i+1]) {
 					intercambiar(lista,i,i+1);

@@ -39,7 +39,9 @@ public class Insercion {
 			ArrayList<Integer> array = new ArrayList<Integer>();
 			array.add(lista[0]); // Agregar primer elemento
 			boolean agregar;
+			//int limiteC = 10000;
 			for (int i = 1; i < lista.length; i++) {
+			//for (int i = 1; i < limiteC; i++) {
 				agregar = false;
 				for (int j = 0; j < array.size(); j++) {
 					if(lista[i] < array.get(j)) {
@@ -53,6 +55,7 @@ public class Insercion {
 				}
 			}
 			for(int i = 0; i < lista.length; i++) { // copiar valores a la lista original
+			//for(int i = 0; i < limiteC; i++) { // copiar valores a la lista original
 				lista[i] = array.get(i);
 			}
 		}

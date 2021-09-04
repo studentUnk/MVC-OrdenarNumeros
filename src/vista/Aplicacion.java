@@ -1,10 +1,19 @@
 package vista;
 
+import java.awt.Component;
 //import java.awt.Color;
 import java.awt.Dimension;
+//import java.awt.FlowLayout;
 //import java.awt.GridLayout;
+//import java.awt.Image;
+//import java.awt.Insets;
+//import java.awt.Toolkit;
+//import java.net.URISyntaxException;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+//import javax.swing.border.Border;
 //import javax.swing.event.DocumentEvent;
 //import javax.swing.event.DocumentListener;
 //import javax.swing.text.Element;
@@ -34,7 +44,7 @@ public class Aplicacion {
 	public JButton botonCargar, botonOrdenar, botonBuscar, botonGuardar, botonPrueba;
 	private JScrollPane scrollTextoLista;
 	public JTextArea textoLista;
-	private JLabel accion;
+	public JLabel [] tiemposTexto;
 	// private JTextArea textoLinea;
 	public JTextField textoBuscar;
 	// public Archivo archivo;
@@ -46,7 +56,7 @@ public class Aplicacion {
 		// archivo = new Archivo();
 		textoLista = new JTextArea();
 		scrollTextoLista = new JScrollPane(textoLista);
-		accion = new JLabel("");
+		//accion = new JLabel("");
 		// scrollTextoLista.setRowHeaderView(textoLinea);
 	}
 
@@ -88,9 +98,13 @@ public class Aplicacion {
 
 		// Agregar elementos al panel derecho
 		jpanelDerecho.add(botonCargar);
+		jpanelDerecho.add(Box.createRigidArea(new Dimension(0,5))); // Espacio vacío entre los botones
 		jpanelDerecho.add(botonGuardar);
+		jpanelDerecho.add(Box.createRigidArea(new Dimension(0,5)));
 		jpanelDerecho.add(botonOrdenar);
+		jpanelDerecho.add(Box.createRigidArea(new Dimension(0,5)));
 		jpanelDerecho.add(botonBuscar);
+		jpanelDerecho.add(Box.createRigidArea(new Dimension(0,5)));
 	}
 
 	/*
@@ -105,17 +119,21 @@ public class Aplicacion {
 	 */
 	public void crearVentana(String titulo) {
 		jframe = new JFrame(titulo);
+		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jframe.setPreferredSize(new Dimension(500, 500));
+		iconoFrame();
+		
 		jpanel = new JPanel();
 		jpanel.setLayout(new BoxLayout(jpanel, BoxLayout.Y_AXIS));
 
 		jpanelDerecho = new JPanel();
 		jpanelDerecho.setLayout(new BoxLayout(jpanelDerecho, BoxLayout.Y_AXIS));
+		//jpanelDerecho.setLayout(new RelativeLayout());
 		jpanelDerecho.setOpaque(true);
+		jpanelDerecho.setBorder(BorderFactory.createEmptyBorder(2,2,2,6));
 		jpanelIzquierdo = new JPanel();
 		jpanelIzquierdo.setLayout(new BoxLayout(jpanelIzquierdo, BoxLayout.Y_AXIS));
-
-		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jframe.setPreferredSize(new Dimension(500, 500));
+		jpanelIzquierdo.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 4));
 
 		seccionDerecha();
 		seccionIzquierda();
@@ -124,13 +142,26 @@ public class Aplicacion {
 		jpanelSuperior.add(jpanelIzquierdo);
 		jpanelSuperior.add(jpanelDerecho);
 		jpanelInferior = new JPanel();
-		// jpanelInferior.setLayout(new FlowLayout());
+		//jpanelInferior.setLayout(new FlowLayout(FlowLayout.));
+		jpanelInferior.setLayout(new BoxLayout(jpanelInferior, BoxLayout.Y_AXIS));
+		//jpanelInferior.setMinimumSize(new Dimension(jframe.getWidth(),jpanelInferior.getPreferredSize().height));
+		//jpanelInferior.setSize(new Dimension(jframe.getWidth(),jpanelInferior.getPreferredSize().height));
+		//jpanelInferior.setMaximumSize(new Dimension(jframe.getSize().width,jpanelInferior.getPreferredSize().height));
+		//jpanelInferior.setAlignmentX(BoxLayout.X_AXIS);
+		jpanelInferior.setAlignmentX(Component.CENTER_ALIGNMENT);
+		jpanelInferior.setBorder(BorderFactory.createEmptyBorder(0,4,4,4));
+		//jpanelInferior.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		//System.out.println(jpanelInferior.getAlignmentX());
+		//jpanelInferior.setAlignmentY(Component.LEFT_ALIGNMENT);
 		seccionInferior();
 
 		// jpanel.add(jpanelIzquierdo);
 		// jpanel.add(jpanelDerecho);
 		jpanel.add(jpanelSuperior);
 		jpanel.add(jpanelInferior);
+		
+		
 
 		jframe.setContentPane(jpanel);
 		jframe.pack();
@@ -146,6 +177,7 @@ public class Aplicacion {
 		textoBuscar = new JTextField();
 		textoBuscar.setMaximumSize(new Dimension(250, textoBuscar.getPreferredSize().height));
 		jpanelDerecho.add(textoBuscar);
+		jpanelDerecho.add(Box.createRigidArea(new Dimension(0,5))); // Espacio vacio entre los elementos
 	}
 
 	/*
@@ -155,11 +187,17 @@ public class Aplicacion {
 	 */
 
 	/**
-	 * Función en proceso!!!!
+	 * Función para cargar los elementos para mostrar los tiempos que tarda en ser ordenada la lista.
 	 */
 	private void seccionInferior() {
 		// accion.setText("El archivo es increiblemente grande");
-		jpanelInferior.add(accion);
+		tiemposTexto = new JLabel[4];
+		for(int i = 0; i < tiemposTexto.length; i++) {
+			tiemposTexto[i] = new JLabel(" ");
+			tiemposTexto[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+			//tiemposTexto[i].setAlignmentX(Component.LEFT_ALIGNMENT);
+			jpanelInferior.add(tiemposTexto[i]);
+		}
 	}
 
 	/**
@@ -188,4 +226,14 @@ public class Aplicacion {
 		jpanelIzquierdo.add(labelSeccionLista);
 		jpanelIzquierdo.add(scrollTextoLista);
 	}
+	
+	/**
+	 * Función usada para cargar una imagen como icono del frame.
+	 */
+	private void iconoFrame() {
+		String rutaArchivo = System.getProperty("user.dir") + "\\src\\res\\iconoFrame.png";
+		ImageIcon imagen = new ImageIcon(rutaArchivo);
+		jframe.setIconImage(imagen.getImage());
+	}
+	
 }
